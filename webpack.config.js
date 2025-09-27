@@ -1,21 +1,24 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-// const mode = 'production';
-const mode = 'development';
+const mode = process.env.NODE_ENV || 'development';
 
 module.exports = {
   mode,
   devtool: mode === 'development' ? 'source-map' : false,
   entry: ['./src/js/main.js', './src/scss/main.scss'],
   output: {
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.scss$/i,
+        test: /\.s?css$/i,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -23,21 +26,15 @@ module.exports = {
               publicPath: './',
             },
           },
-          'css-loader',
+          {
+            loader: 'css-loader',
+          },
           {
             loader: 'postcss-loader',
             options: {
               postcssOptions: {
                 plugins: [
-                  [
-                    'postcss-preset-env',
-                    {
-                      browsers:
-                        mode === 'development'
-                          ? '> 5%, last 2 versions, not dead'
-                          : '> 0.1%, last 3 versions, not dead',
-                    },
-                  ],
+                  'postcss-preset-env',
                 ],
               },
             },
@@ -46,14 +43,14 @@ module.exports = {
         ],
       },
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /(node_modules)/,
         use: {
           loader: 'swc-loader',
         },
       },
       {
-        test: /\.(eot|otf|ttf|woff|woff2|jpg|png|gif|webp|svg)$/,
+        test: /\.(woff2|jpg|png|gif|bmp|webp|svg)$/,
         type: 'asset',
       },
     ],
