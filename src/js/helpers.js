@@ -45,21 +45,6 @@ function initScrollCheck() {
 }
 initScrollCheck();
 
-let lastTouchTime = 0;
-function enableHover() {
-  if (Date.now() - lastTouchTime < 500) return;
-  document.body.classList.add("has-hover");
-  document.removeEventListener("mousemove", enableHover);
-}
-
-function disableHover() {
-  lastTouchTime = Date.now();
-  document.body.classList.remove("has-hover");
-  document.addEventListener("mousemove", enableHover, { once: true });
-}
-
-document.addEventListener("touchstart", disableHover);
-document.addEventListener("mousemove", enableHover, { once: true });
 window.addEventListener('resize', throttle(sizeCheck, 100));
 window.addEventListener('load', sizeCheck);
 document.addEventListener('DOMContentLoaded', sizeCheck);
